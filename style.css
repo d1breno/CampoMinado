@@ -1,0 +1,11 @@
+*, body {
+    width: auto;
+    height: auto;
+    background-color: rgb(53, 60, 82);
+    color: white;
+    font-family: Courier;
+    display: grid;
+    align-content:  center;
+    justify-content: center;
+    overflow: hidden;
+}
