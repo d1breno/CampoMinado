@@ -1,103 +1,102 @@
-const grade = document.getElementById("grade");
-let jogoDeBloqueio = false;
-//Defina o modo de teste como verdadeiro se quiser ver a localização das minas
-const modoTeste = true;
-gerarGame()
+const grid = document.getElementById("grid");
+let lockGame = false;
+// Set test mode to true if you want see mines location
+const testMode = false;
+generateGrid();
 
-//Gerar Jogo 10 * 10 grade
-function gerarGame(){
-    jogoDeBloqueio = false;
-    grade.innerHTML = "";
-    for(var i = 0; i < 10; i++){
-        row = grade.insertRow(i);
-        for(var j =0; j < 10; j++){
-            celula = row.insertCelula(j);
-            celula.onclick = function () { Init(this); };
-            var mina = document.createAttribute("mina");
-            mina.value = "false";
-            celula.setAttributeNode(mina);
+// Generate 10 * 10 Grid
+function generateGrid() {
+    lockGame = false;
+    grid.innerHTML = "";
+    for (var i = 0; i < 10; i++) {
+        row = grid.insertRow(i);
+        for (var j = 0; j < 10; j++) {
+            cell = row.insertCell(j);
+            cell.onclick = function () { init(this); };
+            var mine = document.createAttribute("mine");
+            mine.value = "false";
+            cell.setAttributeNode(mine);
         }
     }
-    gerarMinas();
+    generateMines();
 }
 
-//Gerar Minas Aleatóriamente
-function gerarMinas(){
-    //Adiciona 20 minas ao Jogo
-    for(var i = 0; i < 20; i++ ){
-        var linha = Math.floor(Math.random() * 10);
+// Generate mines randomly
+function generateMines() {
+    // Add 20 mines to game
+    for (var i = 0; i < 20; i++) {
+        var row = Math.floor(Math.random() * 10);
         var col = Math.floor(Math.random() * 10);
-        var celula = grade.linhas[linha].celulas[col];
-        celula.setAttribute("minas", "true");
-        if(testMode){
-            celula.innerHTML = "X";
+        var cell = grid.rows[row].cells[col];
+        cell.setAttribute("mine", "true");
+        if (testMode) {
+            cell.innerHTML = "X";
         }
     }
 }
 
-//destaque todas as minas em vermelho
-function minasDeRevelação(){
-    for(var i = 0; i < 10; i++){
-        for (var j = 0; j < 10; j++){
-            var celula = grid.rows[1].celulas[j];
-            if(celula.getAttribute("mina") == "true"){
-                celula.className = "mina";
+// Highlight all mines red
+function revealMines() {
+    for (var i = 0; i < 10; i++) {
+        for (var j = 0; j < 10; j++) {
+            var cell = grid.rows[i].cells[j];
+            if (cell.getAttribute("mine") == "true") {
+                cell.className = "mine";
             }
         }
     }
 }
 
-function checkJogoCompleto(){
-    var jogoCompleto = true;
-    for(var i = 0; i < 10; i++){
-        for(var j = 0; j < 10; i++){
-            if((grade.linhas[i].celulas[j].getAttribute("mina") == "false") && (grade.linhas[i].celulas [j].innerHTML == "")) {
-                jogoCompleto = false;
+function checkGameComplete() {
+    var gameComplete = true;
+    for (var i = 0; i < 10; i++) {
+        for (var j = 0; j < 10; j++) {
+            if ((grid.rows[i].cells[j].getAttribute("mine") == "false") && (grid.rows[i].cells[j].innerHTML == "")) {
+                gameComplete = false;
             }
         }
     }
+    if (gameComplete) {
+        alert("You Found All Mines!");
+        revealMines();
+    }
 }
 
-if(jogoCompleto){
-    alert("Você encontrou uma Mina!");
-    revelarMinas
-}
-
-function init(celula){
-    //verifique o jogo completo ou não
-    if(jogoDeBloqueio){
+function init(cell) {
+    // Check game completed or no
+    if (lockGame) {
         return;
-    }else{
-        //verifique o clique do usuário na mina
-        if(celula.getAttribute("mina") == "true"){
-            revelarMinas();
-            jogoDeBloqueio = true;
+    } else {
+        // Check user clicked on mine
+        if (cell.getAttribute("mine") == "true") {
+            revealMines();
+            lockGame = true;
         } else {
-            celula.className = "active";
-            //Exibir o número de minas ao redor da celula
-            var contagemDeMinas = 0;
-            var linhasDeCelula = celula.parentNode.rowIndex;
-            var colunaCelular = celula.cellIndex;
-            for(var i = Math.max(linhasDeCelula - 1, 0); i <= Math.min(linhasDeCelula + 1, 9); ij++){
-                for (var j = Math.max(colunaCelular - 1, 0); j <= Math.min(colunaCelular + 1, 9); j++){
-                    if(grade.linhas[i].celulas[j].getAttribute
-                    ("mina") == "true"){
-                        contagemDeMinas++;
+            cell.className = "active";
+            // Display number of mines around cell
+            var mineCount = 0;
+            var cellRow = cell.parentNode.rowIndex;
+            var cellCol = cell.cellIndex;
+            for (var i = Math.max(cellRow - 1, 0); i <= Math.min(cellRow + 1, 9); i++) {
+                for (var j = Math.max(cellCol - 1, 0); j <= Math.min(cellCol + 1, 9); j++) {
+                    if (grid.rows[i].cells[j].getAttribute("mine") == "true") {
+                        mineCount++;
                     }
                 }
             }
-            celula.innerHTML = contagemDeMinas;
-            if(contagemDeMinas == 0){
-                //se não tiver celula
-                for(var i = Math.max(linhasDeCelula - 1, 0); i <= Math.min(linhasDeCelula + 1, 9); ij++){
-                    for (var j = Math.max(colunaCelular - 1, 0); j <= Math.min(colunaCelular + 1, 9); j++){
-                        if(grade.linhas[i].celula[j].innerHTML == ""){
-                            init(grde.linha[i].celulas[j]);
+            cell.innerHTML = mineCount;
+            if (mineCount == 0) {
+                // if cell don't have mine
+                for (var i = Math.max(cellRow - 1, 0); i <= Math.min(cellRow + 1, 9); i++) {
+                    for (var j = Math.max(cellCol - 1, 0); j <= Math.min(cellCol + 1, 9); j++) {
+                        if (grid.rows[i].cells[j].innerHTML == "") {
+                            init(grid.rows[i].cells[j]);
                         }
                     }
                 }
             }
-            checkJogoCompleto();
+            checkGameComplete();
         }
     }
+
 }
