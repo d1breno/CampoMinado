@@ -1,4 +1,4 @@
-body {
+body{
     background-color: rgb(53, 60, 82);
     color: white;
     font-family: Courier;
@@ -9,7 +9,36 @@ body {
     overflow: hidden;
 }
 
-h1 {
+h1{
     font-size: 14pt;
     font-weight: normal;
+}
+
+#grade{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#grade tr td{
+    border: 1px solid #ffffff;
+    background-color: #999;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+}
+
+#grade tr td.active{
+    background-color: #333;
+}
+
+#grade tr td.mine{
+    background-color: #d33434;
+}
+
+button{
+    margin: 12px 0;
+    padding: 4px 0;
+    border: none;
+    outline: none;
+    cursor: pointer;
 }

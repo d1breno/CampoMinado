@@ -1,7 +1,7 @@
 const grade = document.getElementById("grade");
 let jogoDeBloqueio = false;
 //Defina o modo de teste como verdadeiro se quiser ver a localização das minas
-const modoTeste = false;
+const modoTeste = true;
 gerarGame()
 
 //Gerar Jogo 10 * 10 grade
@@ -14,7 +14,7 @@ function gerarGame(){
             celula = row.insertCelula(j);
             celula.onclick = function () { Init(this); };
             var mina = document.createAttribute("mina");
-            mina.value = false;
+            mina.value = "false";
             celula.setAttributeNode(mina);
         }
     }
@@ -31,6 +31,73 @@ function gerarMinas(){
         celula.setAttribute("minas", "true");
         if(testMode){
             celula.innerHTML = "X";
+        }
+    }
+}
+
+//destaque todas as minas em vermelho
+function minasDeRevelação(){
+    for(var i = 0; i < 10; i++){
+        for (var j = 0; j < 10; j++){
+            var celula = grid.rows[1].celulas[j];
+            if(celula.getAttribute("mina") == "true"){
+                celula.className = "mina";
+            }
+        }
+    }
+}
+
+function checkJogoCompleto(){
+    var jogoCompleto = true;
+    for(var i = 0; i < 10; i++){
+        for(var j = 0; j < 10; i++){
+            if((grade.linhas[i].celulas[j].getAttribute("mina") == "false") && (grade.linhas[i].celulas [j].innerHTML == "")) {
+                jogoCompleto = false;
+            }
+        }
+    }
+}
+
+if(jogoCompleto){
+    alert("Você encontrou uma Mina!");
+    revelarMinas
+}
+
+function init(celula){
+    //verifique o jogo completo ou não
+    if(jogoDeBloqueio){
+        return;
+    }else{
+        //verifique o clique do usuário na mina
+        if(celula.getAttribute("mina") == "true"){
+            revelarMinas();
+            jogoDeBloqueio = true;
+        } else {
+            celula.className = "active";
+            //Exibir o número de minas ao redor da celula
+            var contagemDeMinas = 0;
+            var linhasDeCelula = celula.parentNode.rowIndex;
+            var colunaCelular = celula.cellIndex;
+            for(var i = Math.max(linhasDeCelula - 1, 0); i <= Math.min(linhasDeCelula + 1, 9); ij++){
+                for (var j = Math.max(colunaCelular - 1, 0); j <= Math.min(colunaCelular + 1, 9); j++){
+                    if(grade.linhas[i].celulas[j].getAttribute
+                    ("mina") == "true"){
+                        contagemDeMinas++;
+                    }
+                }
+            }
+            celula.innerHTML = contagemDeMinas;
+            if(contagemDeMinas == 0){
+                //se não tiver celula
+                for(var i = Math.max(linhasDeCelula - 1, 0); i <= Math.min(linhasDeCelula + 1, 9); ij++){
+                    for (var j = Math.max(colunaCelular - 1, 0); j <= Math.min(colunaCelular + 1, 9); j++){
+                        if(grade.linhas[i].celula[j].innerHTML == ""){
+                            init(grde.linha[i].celulas[j]);
+                        }
+                    }
+                }
+            }
+            checkJogoCompleto();
         }
     }
 }
